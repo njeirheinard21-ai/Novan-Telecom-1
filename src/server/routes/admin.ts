@@ -1,6 +1,6 @@
-import { Router } from 'express';
-import { requireAuth, requirePermission } from '../middleware/auth';
-import { hasPermission } from '../../lib/permissions';
+import { Router, Request, Response, NextFunction } from 'express';
+import { requireAuth, requirePermission, AuthRequest } from '../middleware/auth';
+import { hasPermission, Role } from '../../lib/permissions';
 import rateLimit from 'express-rate-limit';
 import { adminDb, adminAuth } from '../firebase-admin';
 
@@ -16,10 +16,10 @@ const adminLimiter = rateLimit({
 router.use(adminLimiter);
 router.use(requireAuth);
 
-const asyncHandler = (fn: ((...args: any[]) => any)) => (req: any, res: any, next: any) =>
+const asyncHandler = (fn: ((...args: any[]) => any)) => (req: AuthRequest, res: Response, next: NextFunction) =>
   Promise.resolve(fn(req, res, next)).catch(next);
 
-router.get('/dashboard', requirePermission('orders:read'), asyncHandler(async (req: any, res: any) => {
+router.get('/dashboard', requirePermission('orders:read'), asyncHandler(async (req: AuthRequest, res: Response) => {
     
   const ordersSnapshot = await adminDb.collection('orders').get();
   const orders = ordersSnapshot.docs.map(d => ({ id: d.id, ...d.data() })) as any[];
@@ -73,7 +73,7 @@ router.get('/dashboard', requirePermission('orders:read'), asyncHandler(async (r
   });
 }));
 
-router.get('/settings', requirePermission('settings:manage'), asyncHandler(async (req: any, res: any) => {
+router.get('/settings', requirePermission('settings:manage'), asyncHandler(async (req: AuthRequest, res: Response) => {
   const doc = await adminDb.collection('settings').doc('store').get();
   if (!doc.exists) {
     return res.json({ vatEnabled: false, vatRate: 0, taxLabel: 'VAT', flatShippingRate: 0, freeDeliveryThreshold: 0, zones: [] });
@@ -81,11 +81,11 @@ router.get('/settings', requirePermission('settings:manage'), asyncHandler(async
   res.json(doc.data());
 }));
 
-router.post('/settings', requirePermission('settings:manage'), asyncHandler(async (req: any, res: any) => {
+router.post('/settings', requirePermission('settings:manage'), asyncHandler(async (req: AuthRequest, res: Response) => {
     const docRef = adminDb.collection('settings').doc('store');
   const data = req.body;
   
-  if (data.vatEnabled !== undefined && !hasPermission(req.userRole, 'settings:tax')) {
+  if (data.vatEnabled !== undefined && !hasPermission((req.userRole || 'customer') as Role, 'settings:tax')) {
     delete data.vatEnabled; // silently ignore if no perm
   }
   
@@ -93,7 +93,7 @@ router.post('/settings', requirePermission('settings:manage'), asyncHandler(asyn
   res.json({ success: true });
 }));
 
-router.get('/staff', requirePermission('users:read'), asyncHandler(async (req: any, res: any) => {
+router.get('/staff', requirePermission('users:read'), asyncHandler(async (req: AuthRequest, res: Response) => {
     const users = await adminAuth.listUsers();
   const staff = users.users
     .filter(u => u.customClaims?.role === 'staff' || u.customClaims?.role === 'admin' || u.customClaims?.role === 'super_admin')
@@ -101,7 +101,7 @@ router.get('/staff', requirePermission('users:read'), asyncHandler(async (req: a
   res.json(staff);
 }));
 
-router.post('/staff', requirePermission('users:manage'), asyncHandler(async (req: any, res: any) => {
+router.post('/staff', requirePermission('users:manage'), asyncHandler(async (req: AuthRequest, res: Response) => {
     const { email, role } = req.body;
   if (role === 'super_admin') return res.status(403).json({ error: 'Cannot grant super_admin' });
   
@@ -129,7 +129,7 @@ router.post('/staff', requirePermission('users:manage'), asyncHandler(async (req
   }
 }));
 
-router.delete('/staff/:uid', requirePermission('users:manage'), asyncHandler(async (req: any, res: any) => {
+router.delete('/staff/:uid', requirePermission('users:manage'), asyncHandler(async (req: AuthRequest, res: Response) => {
     const { uid } = req.params;
   
   const user = await adminAuth.getUser(uid);
@@ -146,7 +146,7 @@ router.delete('/staff/:uid', requirePermission('users:manage'), asyncHandler(asy
 }));
 
 
-router.get('/inventory', requirePermission('inventory:read'), asyncHandler(async (req: any, res: any) => {
+router.get('/inventory', requirePermission('inventory:read'), asyncHandler(async (req: AuthRequest, res: Response) => {
     const productsSnap = await adminDb.collection('products').get();
   const products = productsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
   
@@ -156,7 +156,7 @@ router.get('/inventory', requirePermission('inventory:read'), asyncHandler(async
   res.json({ products, ledger });
 }));
 
-router.post('/inventory/adjust', requirePermission('inventory:adjust'), asyncHandler(async (req: any, res: any) => {
+router.post('/inventory/adjust', requirePermission('inventory:adjust'), asyncHandler(async (req: AuthRequest, res: Response) => {
     const { productId, variantId, quantity, reason, notes } = req.body;
   if (!productId || quantity === undefined || !reason) return res.status(400).json({ error: 'Missing fields' });
   
