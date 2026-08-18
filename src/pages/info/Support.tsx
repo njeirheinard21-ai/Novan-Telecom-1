@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { SEO } from '../../components/SEO';
-import { Breadcrumbs } from '../../components/ui/Breadcrumbs';
 import { Container } from '../../components/ui/Container';
 
 export default function Support() {
@@ -9,7 +8,6 @@ export default function Support() {
   return (
     <div className="flex flex-col w-full min-h-[60vh]">
       <SEO title="Support" />
-      <div className="border-b bg-canvas-secondary"><Container><Breadcrumbs items={[{ label: 'Support' }]} className="py-2" /></Container></div>
       <div className="bg-canvas-secondary py-12 border-b">
         <Container>
           <h1 className="text-4xl md:text-5xl font-semibold tracking-tight mb-4">
@@ -20,7 +18,7 @@ export default function Support() {
 
       <Container className="py-12">
         <div className="max-w-2xl text-lg space-y-6">
-          <p>Welcome to our Support page. Nova Telecom is dedicated to providing the best experience.</p>
+          <p>Welcome to our Support page. Novan Telecom is dedicated to providing the best experience.</p>
           <p>For more information, please contact our support team or visit our store.</p>
         </div>
       </Container>

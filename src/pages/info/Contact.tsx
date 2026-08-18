@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { SEO } from '../../components/SEO';
-import { Breadcrumbs } from '../../components/ui/Breadcrumbs';
 import { Container } from '../../components/ui/Container';
 import { siteConfig } from '../../config/site';
 
@@ -10,14 +9,13 @@ export default function Contact() {
   return (
     <div className="flex flex-col w-full min-h-[60vh]">
       <SEO title="Contact Us" />
-      <div className="border-b bg-canvas-secondary"><Container><Breadcrumbs items={[{ label: 'Contact Us' }]} className="py-2" /></Container></div>
       <div className="bg-canvas-secondary py-12 border-b">
         <Container>
           <h1 className="text-4xl md:text-5xl font-semibold tracking-tight mb-4">
             Contact Us
           </h1>
           <p className="text-xl text-fg-muted max-w-2xl">
-            Get in touch with the Nova Telecom team for sales, support, and inquiries.
+            Get in touch with the Novan Telecom team for sales, support, and inquiries.
           </p>
         </Container>
       </div>

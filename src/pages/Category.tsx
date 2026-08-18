@@ -4,7 +4,6 @@ import { LocalizedLink as Link } from '../components/ui/LocalizedLink';
 import { useParams, useSearchParams } from 'react-router';
 import { SEO } from '../components/SEO';
 import { Container } from '../components/ui/Container';
-import { Breadcrumbs } from '../components/ui/Breadcrumbs';
 import { useProducts } from '../hooks/useProducts';
 import { useEffect, useState, useMemo } from 'react';
 import { Product } from '../types/product';
@@ -77,13 +76,6 @@ export default function Category() {
   return (
     <div className="flex flex-col w-full min-h-[60vh] pb-12">
       <SEO title={`${t('buy')} ${id}`} />
-      <div className="bg-canvas-secondary border-b">
-        <Container>
-          <Breadcrumbs items={[
-            { label: id ? id.charAt(0).toUpperCase() + id.slice(1) : 'Category' }
-          ]} />
-        </Container>
-      </div>
       <div className="bg-canvas-secondary py-12 border-b">
         <Container>
           <h1 className="text-4xl md:text-5xl font-semibold tracking-tight capitalize mb-4">

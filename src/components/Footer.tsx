@@ -58,7 +58,7 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-border">
-          <p>&copy; {new Date().getFullYear()} Nova Telecom. {t('all_rights_reserved')}</p>
+          <p>&copy; {new Date().getFullYear()} Novan Telecom. {t('all_rights_reserved')}</p>
           <div className="flex space-x-4">
             <Link to="/legal" className="hover:text-fg hover:underline transition-colors">{t('privacy_policy')}</Link>
             <span className="hidden md:inline border-l border-border h-3" />

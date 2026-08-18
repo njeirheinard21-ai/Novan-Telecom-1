@@ -98,14 +98,7 @@ function LangSync() {
   return <Outlet />;
 }
 
-import { FirebaseConfigError } from './components/FirebaseConfigError';
-import { isFirebaseConfigured } from './lib/firebase';
-
 export default function App() {
-  if (!isFirebaseConfigured) {
-    return <FirebaseConfigError />;
-  }
-
   return (
     <ErrorBoundary><div className="bg-surface/50"></div>
       <AuthProvider>

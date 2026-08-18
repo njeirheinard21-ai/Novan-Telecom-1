@@ -12,7 +12,7 @@ export function NewsletterSection() {
             Restez informé.
           </h2>
           <p className="text-lg text-fg-muted mb-8">
-            S'inscrire for the latest news, offers, and product announcements from Nova Telecom.
+            S'inscrire for the latest news, offers, and product announcements from Novan Telecom.
           </p>
           
           <form 

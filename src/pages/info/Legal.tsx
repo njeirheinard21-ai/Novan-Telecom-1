@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { SEO } from '../../components/SEO';
-import { Breadcrumbs } from '../../components/ui/Breadcrumbs';
 import { Container } from '../../components/ui/Container';
 
 export default function Legal() {
@@ -9,7 +8,6 @@ export default function Legal() {
   return (
     <div className="flex flex-col w-full min-h-[60vh]">
       <SEO title="Legal" />
-      <div className="border-b bg-canvas-secondary"><Container><Breadcrumbs items={[{ label: 'Legal' }]} className="py-2" /></Container></div>
       <div className="bg-canvas-secondary py-12 border-b">
         <Container>
           <h1 className="text-4xl md:text-5xl font-semibold tracking-tight mb-4">

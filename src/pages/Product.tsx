@@ -5,7 +5,6 @@ import { useParams, } from 'react-router';
 import { SEO } from '../components/SEO';
 import { Container } from '../components/ui/Container';
 import { Button } from '../components/ui/Button';
-import { Breadcrumbs } from '../components/ui/Breadcrumbs';
 import { useEffect, useState } from 'react';
 import { productRepository } from '../data';
 import { Product as ProductType, ProductVariant } from '../types/product';
@@ -62,13 +61,6 @@ export default function Product() {
   return (
     <div className="flex flex-col w-full min-h-[60vh] pb-24">
       <SEO title={getLocalizedValue(product.name as any, i18n?.language || 'en')} />
-      
-      <Container>
-        <Breadcrumbs items={[
-          { label: product.categoryId.charAt(0).toUpperCase() + product.categoryId.slice(1), href: `/category/${product.categoryId}` },
-          { label: getLocalizedValue(product.name as any, i18n?.language || 'en') }
-        ]} />
-      </Container>
       
       {/* Product sticky header */}
       <div className="sticky top-12 lg:top-14 z-40 bg-canvas/80 backdrop-blur-md border-b border-border/50 py-3"> 

@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-const SITE_URL = process.env.VITE_SITE_URL || 'https://novatelecom.cm';
+const SITE_URL = process.env.VITE_SITE_URL || 'https://novantelecom.cm';
 const pages = [
   '/',
   '/search',
