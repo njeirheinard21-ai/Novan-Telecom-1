@@ -7,7 +7,7 @@ import { formatPrice } from '../../../lib/money';
 import { Button } from '../../../components/ui/Button';
 
 const STATUS_OPTIONS = [
-  'pending', 'payment_pending', 'paid', 'processing', 'shipped', 'delivered', 'cancelled', 'refunded'
+  'pending', 'payment_pending', 'paid', 'processing', 'shipped', 'delivered', 'cancelled', 'refunded', 'amount_mismatch'
 ];
 
 export default function AdminOrderDetail() {
@@ -79,12 +79,17 @@ export default function AdminOrderDetail() {
           <div>
             <h1 className="text-2xl font-bold mb-2">Order {order.orderNumber}</h1>
             <p className="text-fg-muted">Placed on {new Date(order.createdAt).toLocaleString()}</p>
+            {order.status === 'amount_mismatch' && (
+              <div className="mt-2 inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                ⚠️ Payment Amount Mismatch
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-4 bg-canvas-secondary p-4 rounded-2xl border">
             <div>
               <div data-for="orderStatus" className="block text-xs font-semibold text-fg-muted mb-1 uppercase tracking-wide">{t('status', { ns: 'common' })}</div>
               <select 
-                className="border-border/50 rounded-xl text-sm p-1.5 bg-canvas"
+                className={`border-border/50 rounded-xl text-sm p-1.5 bg-canvas ${order.status === 'amount_mismatch' ? 'border-red-500 text-red-600 font-medium' : ''}`}
                 value={newStatus}
                 onChange={(e) => setNewStatus(e.target.value)}
                 disabled={updating}

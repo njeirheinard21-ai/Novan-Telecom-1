@@ -48,7 +48,7 @@ export default function Product() {
 
   const handleAddToCart = () => {
     if (product.variants && product.variants.length > 0 && !selectedProductVariant) {
-      alert("Please select a variant before adding to cart.");
+      alert(t("select_variant_error", { ns: "products" }));
       return;
     }
     
@@ -106,7 +106,7 @@ export default function Product() {
                          onClick={() => setSelectedProductVariant(variant)}
                          className={`flex justify-between items-center p-4 rounded-xl border-2 transition-all focus:outline-none focus:ring-2 focus:ring-accent ${
                            selectedProductVariant?.id === variant.id 
-                             ? 'border-accent bg-accent/10/50' 
+                             ? 'border-accent bg-accent/10' 
                              : 'border-transparent bg-canvas hover:border-gray-200'
                          }`}
                        >

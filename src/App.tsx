@@ -74,6 +74,13 @@ function LangSync() {
   const { i18n } = useTranslation();
   const location = useLocation();
 
+  // Hoist the effect ABOVE any conditional returns to obey Rules of Hooks
+  useEffect(() => {
+    if (lang && ['en', 'fr'].includes(lang) && i18n.language !== lang) {
+      i18n.changeLanguage(lang);
+    }
+  }, [lang, i18n]);
+
   if (lang && !['en', 'fr'].includes(lang)) {
     const currentLang = i18n.language?.split('-')[0] || 'en';
     const targetLang = ['en', 'fr'].includes(currentLang) ? currentLang : 'en';
@@ -87,20 +94,15 @@ function LangSync() {
       newPath = `/${targetLang}${location.pathname}`;
     }
     
-    return <Navigate to={`${newPath}${location.search}`} replace />;
+    return <Navigate to={`${newPath}${location.search}`} state={location.state} replace />;
   }
 
-  useEffect(() => {
-    if (lang && ['en', 'fr'].includes(lang) && i18n.language !== lang) {
-      i18n.changeLanguage(lang);
-    }
-  }, [lang, i18n]);
   return <Outlet />;
 }
 
 export default function App() {
   return (
-    <ErrorBoundary><div className="bg-surface/50"></div>
+    <ErrorBoundary>
       <AuthProvider>
         <BrowserRouter>
           <I18nHelmet />
@@ -124,9 +126,9 @@ export default function App() {
                 <Route path="wishlist" element={<AccountWishlist />} />
               </Route>
 
-<Route path="admin" element={<RouteGuard requireAuth requirePermission="orders:read"><AdminLayout /></RouteGuard>}>
+              <Route path="admin" element={<RouteGuard requireAuth requireRole={['staff', 'admin', 'super_admin']}><AdminLayout /></RouteGuard>}>
                 <Route index element={<Dashboard />} />
-                <Route path="products" element={<RouteGuard requireAuth requirePermission="products:read"><AdminProductList /></RouteGuard>} />
+                <Route path="products" element={<RouteGuard requireAuth requirePermission="admin:products:read"><AdminProductList /></RouteGuard>} />
                 <Route path="products/new" element={<RouteGuard requireAuth requirePermission="products:write"><AdminProductForm /></RouteGuard>} />
                 <Route path="products/:id/edit" element={<RouteGuard requireAuth requirePermission="products:write"><AdminProductForm /></RouteGuard>} />
                 <Route path="orders" element={<RouteGuard requireAuth requirePermission="orders:read"><AdminOrderList /></RouteGuard>} />

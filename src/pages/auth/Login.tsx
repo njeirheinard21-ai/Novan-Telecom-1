@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { useLocalizedNavigate as useNavigate } from '../../hooks/useLocalizedNavigate';
+import { useLocalizedNavigate } from '../../hooks/useLocalizedNavigate';
+import { useNavigate } from 'react-router';
 import { LocalizedLink as Link } from '../../components/ui/LocalizedLink';
 import { useState } from 'react';
 import { useLocation } from 'react-router';
@@ -14,6 +15,7 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   
+  const localizedNavigate = useLocalizedNavigate();
   const navigate = useNavigate();
   const location = useLocation();
   
@@ -25,7 +27,8 @@ export default function Login() {
     setError('');
     try {
       await loginWithEmail(email, password);
-      navigate(from, { replace: true });
+      if (from === '/') localizedNavigate('/');
+      else navigate(from, { replace: true });
     } catch (err: any) {
       setError(err.message || 'Failed to sign in.');
     } finally {
@@ -36,7 +39,8 @@ export default function Login() {
   const handleGoogle = async () => {
     try {
       await loginWithGoogle();
-      navigate(from, { replace: true });
+      if (from === '/') localizedNavigate('/');
+      else navigate(from, { replace: true });
     } catch (err: any) {
       setError(err.message || 'Google sign in failed.');
     }
@@ -45,7 +49,7 @@ export default function Login() {
   return (
     <AuthLayout 
       title="Sign in to your account" 
-      subtitle="Enter your details to proceed and access your Apple experience."
+      subtitle="Enter your details to proceed and access your Novan Telecom account."
       image="https://images.unsplash.com/photo-1491933382434-500287f9b54b?q=80&w=2000&auto=format&fit=crop"
     >
       {error && (
@@ -56,7 +60,7 @@ export default function Login() {
       
       <form onSubmit={handleLogin} className="space-y-5">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium mb-2 text-fg-muted">Apple ID (Email)</label>
+          <label htmlFor="email" className="block text-sm font-medium mb-2 text-fg-muted">Email</label>
           <input 
             id="email" 
             type="email" 
@@ -119,7 +123,7 @@ export default function Login() {
       </div>
       
       <div className="mt-10 text-center text-sm text-fg-muted">
-        Don't have an Apple ID?{' '}
+        Don't have an account?{' '}
         <Link to="/register" className="text-accent font-medium hover:underline">
           Create yours now.
         </Link>
