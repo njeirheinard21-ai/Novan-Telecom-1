@@ -17,7 +17,6 @@ export default defineConfig(() => {
               if (id.includes('firebase')) return 'firebase_vendor';
               if (id.includes('lucide-react')) return 'icons_vendor';
               if (id.includes('i18next')) return 'i18n_vendor';
-              if (id.includes('react/') || id.includes('react-dom/') || id.includes('react-router')) return 'react_vendor';
               return 'vendor';
             }
           }
